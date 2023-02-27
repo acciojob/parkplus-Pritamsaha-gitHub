@@ -48,30 +48,34 @@ public class PaymentServiceImpl implements PaymentService {
 //        reservation.getSpot().setOccupied(true);
 //        reservationRepository2.save(reservation);
 //        return payment;
-        Reservation reservation = reservationRepository2.findById(reservationId).get();
-        Payment payment = new Payment();  //This is throwing null because i didn't set payment  while adding eveything in payment
-        String payment1 = "CASH",payment2 = "CARD",payment3 = "UPI";
-        mode = mode.toUpperCase();
-        if(reservation.getNumberOfHours() * reservation.getSpot().getPricePerHour() > amountSent){
-            throw new Exception("Insufficient Amount");
+        try{
+            Reservation reservation = reservationRepository2.findById(reservationId).get();
+            Payment payment = new Payment();  //This is throwing null because i didn't set payment  while adding eveything in payment
+            String payment1 = "CASH",payment2 = "CARD",payment3 = "UPI";
+            mode = mode.toUpperCase();
+            if(reservation.getNumberOfHours() * reservation.getSpot().getPricePerHour() > amountSent){
+                throw new Exception("Insufficient Amount");
+            }
+            if(mode.equals(payment1)){
+                payment.setPaymentMode(PaymentMode.CASH);
+            }
+            else if(mode.equals(payment2))  {
+                payment.setPaymentMode(PaymentMode.CARD);
+            }
+            else if (mode.equals(payment3)){
+                payment.setPaymentMode(PaymentMode.UPI);
+            }
+            else{
+                throw new Exception("Payment mode not detected");
+            }
+            payment.setPaymentCompleted(true);
+            payment.setReservation(reservation);
+            reservation.setPayment(payment);
+            reservation.getSpot().setOccupied(true);
+            reservationRepository2.save(reservation);
+            return payment;
+        }catch (Exception e){
+            return null;
         }
-        if(mode.equals(payment1)){
-            payment.setPaymentMode(PaymentMode.CASH);
-        }
-        else if(mode.equals(payment2))  {
-            payment.setPaymentMode(PaymentMode.CARD);
-        }
-        else if (mode.equals(payment3)){
-            payment.setPaymentMode(PaymentMode.UPI);
-        }
-        else{
-            throw new Exception("Payment mode not detected");
-        }
-        payment.setPaymentCompleted(true);
-        payment.setReservation(reservation);
-        reservation.setPayment(payment);
-        reservation.getSpot().setOccupied(true);
-        reservationRepository2.save(reservation);
-        return payment;
     }
 }
