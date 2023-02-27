@@ -35,7 +35,7 @@ public class ReservationServiceImpl implements ReservationService {
             List<Spot> spotList = parkingLot.getSpotList();
             boolean checkForSpots = false;
             for (Spot spot : spotList) {
-                if (!spot.isOccupied()) {
+                if (!spot.getOccupied()) {
                     checkForSpots = true;
                     break;
                 }
@@ -63,21 +63,21 @@ public class ReservationServiceImpl implements ReservationService {
 
             for (Spot spot : spotList) {
                 if (requestSpotType.equals(SpotType.OTHERS) && spot.getSpotType().equals(SpotType.OTHERS)) {
-                    if (spot.getPricePerHour() * timeInHours < minimumPrice && !spot.isOccupied()) {
+                    if (spot.getPricePerHour() * timeInHours < minimumPrice && !spot.getOccupied()) {
                         minimumPrice = spot.getPricePerHour() * timeInHours;
                         checkForSpots = true;
                         spotChosen = spot;
                     }
                 } else if (requestSpotType.equals(SpotType.FOUR_WHEELER) && spot.getSpotType().equals(SpotType.OTHERS) ||
                         spot.getSpotType().equals(SpotType.FOUR_WHEELER)) {
-                    if (spot.getPricePerHour() * timeInHours < minimumPrice && !spot.isOccupied()) {
+                    if (spot.getPricePerHour() * timeInHours < minimumPrice && !spot.getOccupied()) {
                         minimumPrice = spot.getPricePerHour() * timeInHours;
                         checkForSpots = true;
                         spotChosen = spot;
                     }
                 } else if (requestSpotType.equals(SpotType.TWO_WHEELER) && spot.getSpotType().equals(SpotType.OTHERS) ||
                         spot.getSpotType().equals(SpotType.FOUR_WHEELER) || spot.getSpotType().equals(SpotType.TWO_WHEELER)) {
-                    if (spot.getPricePerHour() * timeInHours < minimumPrice && !spot.isOccupied()) {
+                    if (spot.getPricePerHour() * timeInHours < minimumPrice && !spot.getOccupied()) {
                         minimumPrice = spot.getPricePerHour() * timeInHours;
                         checkForSpots = true;
                         spotChosen = spot;
